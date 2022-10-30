@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "563075537570",
+    "project_id": "ecamlendar",
+    "storage_bucket": "ecamlendar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563075537570:android:201fa60b7f90eb2ec015fb",
+        "android_client_info": {
+          "package_name": "com.ecam.calendar_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563075537570-at5bk1dhorhotc5cfbmjfuc409qv2jnc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgYaLm6cSdLDemZ-XPwwr-m72eVSKlRJI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563075537570-at5bk1dhorhotc5cfbmjfuc409qv2jnc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
