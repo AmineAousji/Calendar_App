@@ -1,97 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
-
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class Schedule extends StatefulWidget {
+  /// Creates the home page to display teh calendar widget.
+  const Schedule({Key? key}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _ScheduleState createState() => _ScheduleState();
 }
 
 class _ScheduleState extends State<Schedule> {
-
-  DateTime? selectedDay ;
-  List <CleanCalendarEvent>? selectedEvent;
-
-  final Map<DateTime,List<CleanCalendarEvent>> events = {
-    DateTime (DateTime.now().year,DateTime.now().month,DateTime.now().day):
-    [
-      CleanCalendarEvent('Event A',
-          startTime: DateTime(
-              DateTime.now().year,DateTime.now().month,DateTime.now().day,10,0),
-          endTime:  DateTime(
-              DateTime.now().year,DateTime.now().month,DateTime.now().day,12,0),
-          description: 'A special event',
-          //color: Colors.blue![700]
-      ),
-    ],
-
-    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 2):
-    [
-      CleanCalendarEvent('Event B',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 10, 0),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 12, 0),
-          color: Colors.orange),
-      CleanCalendarEvent('Event C',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 14, 30),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 17, 0),
-          color: Colors.pink),
-    ],
-  };
-
-  void _handleData(date){
-    setState(() {
-      selectedDay = date;
-      selectedEvent = events[selectedDay] ?? [];
-    });
-    print(selectedDay);
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    selectedEvent = events[selectedDay] ?? [];
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Calendar'),
-        centerTitle: true,
-      ),
-      body:  SafeArea(
-        child: Calendar(
-          startOnMonday: true,
-          selectedColor: Colors.blue,
-          todayColor: Colors.red,
-          eventColor: Colors.green,
-          eventDoneColor: Colors.amber,
-          bottomBarColor: Colors.deepOrange,
-          onRangeSelected: (range) {
-            print('selected Day ${range.from},${range.to}');
-          },
-          onDateSelected: (date){
-            return _handleData(date);
-          },
-          events: events,
-          isExpanded: true,
-          dayOfWeekStyle: const TextStyle(
-            fontSize: 15,
-            color: Colors.black12,
-            fontWeight: FontWeight.w100,
-          ),
-          bottomBarTextStyle: const TextStyle(
-            color: Colors.white,
-          ),
-          hideBottomBar: false,
-          hideArrows: false,
-          weekDays: const ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        appBar: AppBar(
+          title: const Text('Calendar'),
+          centerTitle: true,
         ),
-      ),
-    );
+        body: SfCalendar(
+          view: CalendarView.week,
+          dataSource: MeetingDataSource(_getDataSource()),
+          // by default the month appointment display mode set as Indicator, we can
+          // change the display mode as appointment using the appointment display
+          // mode property
+          monthViewSettings: const MonthViewSettings(
+              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+        ));
   }
+
+  List<Meeting> _getDataSource() {
+    final List<Meeting> meetings = <Meeting>[];
+    final DateTime today = DateTime.now();
+    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
+    final DateTime endTime = startTime.add(const Duration(hours: 2));
+    meetings.add(Meeting(
+        'Conference', startTime, endTime, const Color(0xFF0F8644), false));
+    return meetings;
+  }
+}
+
+/// An object to set the appointment collection data source to calendar, which
+/// used to map the custom appointment data to the calendar appointment, and
+/// allows to add, remove or reset the appointment collection.
+class MeetingDataSource extends CalendarDataSource {
+  /// Creates a meeting data source, which used to set the appointment
+  /// collection to the calendar
+  MeetingDataSource(List<Meeting> source) {
+    appointments = source;
+  }
+
+  @override
+  DateTime getStartTime(int index) {
+    return _getMeetingData(index).from;
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return _getMeetingData(index).to;
+  }
+
+  @override
+  String getSubject(int index) {
+    return _getMeetingData(index).eventName;
+  }
+
+  @override
+  Color getColor(int index) {
+    return _getMeetingData(index).background;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return _getMeetingData(index).isAllDay;
+  }
+
+  Meeting _getMeetingData(int index) {
+    final dynamic meeting = appointments![index];
+    late final Meeting meetingData;
+    if (meeting is Meeting) {
+      meetingData = meeting;
+    }
+
+    return meetingData;
+  }
+}
+
+/// Custom business object class which contains properties to hold the detailed
+/// information about the event data which will be rendered in calendar.
+class Meeting {
+  /// Creates a meeting class with required details.
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+
+  /// Event name which is equivalent to subject property of [Appointment].
+  String eventName;
+
+  /// From which is equivalent to start time property of [Appointment].
+  DateTime from;
+
+  /// To which is equivalent to end time property of [Appointment].
+  DateTime to;
+
+  /// Background which is equivalent to color property of [Appointment].
+  Color background;
+
+  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
+  bool isAllDay;
 }

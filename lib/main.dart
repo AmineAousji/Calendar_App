@@ -2,20 +2,16 @@ import 'package:calendar_app/Schedule.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  return runApp(CalendarApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+/// The app which hosts the home page which contains the calendar on it.
+class CalendarApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Schedule(),
-    );
+    return const MaterialApp(
+        title: 'Calendar',
+        debugShowCheckedModeBanner: false,
+        home: Schedule());
   }
 }
