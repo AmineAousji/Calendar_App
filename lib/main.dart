@@ -2,6 +2,7 @@ import 'package:calendar_app/Schedule.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'services/database.dart';
+import 'services/network.dart';
 
 void main() async {
   // initializers to talk with firebase
@@ -17,7 +18,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // create instance of database
-  final DatabaseService db = DatabaseService();  
+  final DatabaseService db = DatabaseService();
+  final NetworkService nw = NetworkService();
 
   @override
   Widget build(BuildContext context) {
@@ -33,5 +35,6 @@ class _MyAppState extends State<MyApp> {
 
     // get data from firestore database
     db.printData();
+    nw.getCalendar("17288");
   }
 }
