@@ -36,5 +36,19 @@ class _MyAppState extends State<MyApp> {
     // get data from firestore database
     db.printData();
     nw.getCalendar("17288");
+    //Test de la fonction update
+    Map<String, Object> event = {};
+    event["calendarName"] = "3/11";
+    event["start"] = DateTime.utc(2022, 11, 9);
+    event["end"] = DateTime.utc(2022, 11, 10);
+    event["location"] = "LLN";
+    event["name"] = "Emen";
+    event["public"] = false;
+
+
+    db.updateData("6Xc4RPHwTtm5ztsU3K4R", event);
   }
 }
+  }
+}
+
