@@ -8,20 +8,38 @@ class DatabaseService {
 
   late Future<DocumentSnapshot> eventDocument;
 
-  void readData() {
-    eventCollection.get().then(
-      (res) {
-        final data = res.docs;
-        for (var i in data) {
-          print(i.data());
-          print(i.id);
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
-  }
+  /// Get multiple events. (Need to put an "await" keyword to recuperate the events)
+  /// You can filter with the parameters:
+  /// - calendar : string
+  Future<List<Event>> readData({List? calendarNames}) async {
+    List<Event> events = [];
 
- 
+    print(calendarNames);
+    // .where({"calendarName","in",[calendarNames]})
+    eventCollection.get()
+        .then(
+          (res) {
+            final docs = res.docs;
+            for (var i in docs) {
+              var data = i.data() as Map<String, dynamic>;
+
+              var event = Event(
+                  id: i.id,
+                  name: data["name"],
+                  calendarName: data["calendarName"],
+                  start: data["start"],
+                  end: data["end"],
+                  location: data["location"],
+                  public: data["public"]);
+              events.add(event);
+            }
+            print(events.length);
+          },
+          onError: (e) => print("Error getting events: $e"),
+        );
+
+    return events;
+  }
 
   void deleteData(String id) {
     eventCollection.doc(id).delete();
@@ -33,6 +51,7 @@ class DatabaseService {
   }
 
   void updateData(String id, Map<String, Object> event) {
+    //maybe in the future try to only be able to update "public=false" events
     //modifier pour prendre objet event
     DocumentReference eventDocument = eventCollection.doc(id);
     eventDocument.update(event);

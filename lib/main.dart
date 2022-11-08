@@ -34,7 +34,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // get data from firestore database
-    db.readData();
+    db.readData(calendarNames: ["17288"]);
+
     // nw.getCalendar("17288");
     //Test de la fonction update
     Map<String, Object> event = {};
@@ -45,9 +46,6 @@ class _MyAppState extends State<MyApp> {
     event["name"] = "Nicolas";
     event["public"] = false;
 
-
     db.updateData("6Xc4RPHwTtm5ztsU3K4R", event);
   }
 }
-
-
