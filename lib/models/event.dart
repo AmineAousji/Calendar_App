@@ -1,7 +1,7 @@
 class Event {
   final String calendarName;
   final String location;
-  final String name;
+  final String title;
   final String description;
   final bool public;
   final DateTime start;
@@ -13,7 +13,7 @@ class Event {
       this.description = "",
       required this.end,
       required this.location,
-      required this.name,
+      required this.title,
       required this.public,
       required this.start,
       this.rules });
