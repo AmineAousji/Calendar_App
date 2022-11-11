@@ -1,8 +1,11 @@
 import 'package:calendar_app/Schedule.dart';
+import 'package:calendar_app/services/event_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'services/database.dart';
 import 'services/network.dart';
+import 'EventPage.dart';
 
 void main() async {
   // initializers to talk with firebase
@@ -11,25 +14,42 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  // create instance of database
+class MyApp extends StatelessWidget {
   final DatabaseService db = DatabaseService();
   final NetworkService nw = NetworkService();
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Schedule(),
-    );
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+    create: (context) => EventProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MainPage(),
+      )
+  );
+
   }
 
-  @override
+class MainPage extends StatelessWidget{
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Calendar"),
+        centerTitle: true,
+      ),
+      body: Schedule(),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add, color: Colors.red,),
+        onPressed: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => Eventpage())
+          ),
+        },
+      ),
+    );
+
+  }
+}
+ /*@override
   void initState() {
     super.initState();
 
@@ -44,10 +64,8 @@ class _MyAppState extends State<MyApp> {
     event["location"] = "LLN";
     event["name"] = "Nicolas";
     event["public"] = false;
-
-
     db.updateData("6Xc4RPHwTtm5ztsU3K4R", event);
-  }
-}
+  }*/
+
 
 
