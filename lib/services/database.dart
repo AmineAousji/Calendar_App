@@ -13,7 +13,10 @@ class DatabaseService {
   Future<List<Event>> readData({List? calendarNames}) async {
     List<Event> events = [];
 
-    await eventCollection.where("calendarName", whereIn: calendarNames).get().then(
+    await eventCollection
+        .where("calendarName", whereIn: calendarNames)
+        .get()
+        .then(
       (res) {
         final docs = res.docs;
         for (var i in docs) {
@@ -61,7 +64,6 @@ class DatabaseService {
       },
       onError: (e) => print("Error getting document: $e"),
     );
-
     return event;
   }
 
