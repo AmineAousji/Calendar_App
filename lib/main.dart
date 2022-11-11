@@ -34,7 +34,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // get data from firestore database
-    db.readData(calendarNames: ["17288"]);
+    // db.readData(calendarNames: ["17288","Test"]);
+    db.readSingleEvent("wiChYFKmELobcKq4MM6l");
 
     // nw.getCalendar("17288");
     //Test de la fonction update
