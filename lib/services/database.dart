@@ -3,36 +3,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
   // collection reference
+  final FirebaseFirestore db = FirebaseFirestore.instance;
   final CollectionReference eventCollection =
       FirebaseFirestore.instance.collection("events");
 
-  late Future<DocumentSnapshot> eventDocument;
+  // convert events into Map so that Firestore understands and invertedly
+  final eventsRef = FirebaseFirestore.instance
+      .collection("events")
+      .withConverter(
+          fromFirestore: Event.fromFirestore,
+          toFirestore: (Event eventTest, options) => eventTest.toFirestore());
+
+  // late Future<DocumentSnapshot> eventDocument;
 
   /// Get multiple events. You can filter with the parameters:
   /// - calendar : string
   Future<List<Event>> readData({List? calendarNames}) async {
     List<Event> events = [];
 
-    await eventCollection
+    events = await eventsRef
         .where("calendarName", whereIn: calendarNames)
         .get()
         .then(
       (res) {
-        final docs = res.docs;
-        for (var i in docs) {
-          var data = i.data() as Map<String, dynamic>;
-
-          var event = Event(
-              id: i.id,
-              name: data["name"],
-              calendarName: data["calendarName"],
-              start: data["start"],
-              end: data["end"],
-              location: data["location"],
-              public: data["public"]);
-          events.add(event);
+        for (var i in res.docs) {
+          events.add(i.data());
         }
         print("Retrieved " + events.length.toString() + " events");
+        return events;
       },
       onError: (e) => print("Error getting events: $e"),
     );
@@ -44,26 +42,18 @@ class DatabaseService {
   /// The parameter:
   /// - id : string
   Future<Event> readSingleEvent(String id) async {
-    final docRef = eventCollection.doc(id);
     late Event event;
 
-    await docRef.get().then(
-      (DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    event = (await eventsRef.doc(id).get()).data()!;
+    // event = await eventsRef.doc(id).get().then(
+    //   (res) {
+    //     event = res.data()!;
+    //     print(event);
+    //     return event;
+    //   },
+    //   onError: (e) => print("Error getting event : $e"),
+    // );
 
-        event = Event(
-            id: id,
-            name: data["name"],
-            calendarName: data["calendarName"],
-            start: data["start"],
-            end: data["end"],
-            location: data["location"],
-            public: data["public"]);
-
-        print("Retrieved event :" + event.name);
-      },
-      onError: (e) => print("Error getting document: $e"),
-    );
     return event;
   }
 
@@ -74,6 +64,25 @@ class DatabaseService {
   void createData(Map event) {
     //modifier pour prendre objet event
     eventCollection.add(event);
+
+    //// PASS event as Event object
+    // await eventsRef.set(event,SetOptions(merge: true));
+  }
+
+  /// Create a Batch of multiple events and does a single request to Firestore.
+  /// The parameter :
+  /// - events : List(Event) = list of Event objects to send
+  Future<void> createBatchOfData(List<Event> events) async {
+    final batch = db.batch();
+
+    // going through each event and add them to the batch
+    for (Event event in events) {
+      var docRef = eventsRef.doc(event.id);
+      batch.set(docRef, event, SetOptions(merge: true));
+    }
+
+    batch.commit().then((value) =>
+        print("Finnished batching ${events.length.toString()} events"));
   }
 
   void updateData(String id, Map<String, Object> event) {

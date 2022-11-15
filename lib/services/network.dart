@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,7 +12,7 @@ class NetworkService {
     - year serie (année) ex : serie_4MIN5A
     - classroom ex : 2D15
   **/
-  void getCalendar(calendarId) async {
+  Future<List<Event>> getCalendar(calendarId) async {
     // add the selected Id of the calendar
     var url = Uri.parse(calendarUrl + calendarId);
     final response = await http.get(url);
@@ -28,7 +26,6 @@ class NetworkService {
 
       // this removes the headers of the calendar
       eventsList.removeAt(0);
-
 
       for (var event in eventsList) {
         var eventDetails = event.split("\n");
@@ -62,7 +59,7 @@ class NetworkService {
             end = Timestamp.fromDate(DateTime.parse(endtString));
           } else if (detail.startsWith("RRULE")) {
             var rulesList = detail.split(":").last.split(";");
-            rules = { for (var e in rulesList) e.split("=")[0] : e.split("=")[1]};
+            rules = {for (var e in rulesList) e.split("=")[0]: e.split("=")[1]};
           }
 
           // print(detail);
@@ -81,8 +78,12 @@ class NetworkService {
         // print(newEvent);
         events.add(newEvent);
       }
+      print("Retrieved " + events.length.toString() + " events");
+
     } else {
       throw Exception("failure getting the calendar");
     }
+
+    return events;
   }
 }
