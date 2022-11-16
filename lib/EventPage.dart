@@ -30,6 +30,14 @@ class _EventpageState extends State<Eventpage> {
     if (widget.event == null){
       startDate = DateTime.now();
       endDate = DateTime.now().add(const Duration(hours : 2));
+    }else{
+      // being able to modify an event
+      final event = widget.event!;
+
+      titleController.text = event.title;
+      startDate = event.start;
+      endDate = event.end;
+
     }
   }
 
@@ -229,8 +237,16 @@ class _EventpageState extends State<Eventpage> {
           start: startDate
       );
 
+      final isUpdating = widget.event != null;
       final provider = Provider.of<EventProvider>(context,listen: false );
-      provider.addEevent(event);
+
+      if(isUpdating){
+        provider.editEvent(event, widget.event!);
+
+      }else{
+        provider.addEevent(event);
+      }
+
       Navigator.of(context).pop();
 
     }
