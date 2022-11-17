@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
@@ -10,6 +11,7 @@ class Event {
   final Timestamp start;
   final Timestamp end;
   final Map? rules; // nullable rules that has 'freq', 'count' and 'byDay' keys
+  final Color? backgroundColor;
 
   Event(
       {required this.id,
@@ -20,12 +22,23 @@ class Event {
       required this.end,
       this.location,
       required this.public,
-      this.rules});
+      this.rules,
+      this.backgroundColor});
 
   @override
   String toString() {
     var string =
-        "{id: $id, name: $name, calendarName: $calendarName, description: $description, start: $start, end: $end, location: $location, public: $public, rules: $rules}";
+        """{
+          id: $id, 
+          name: $name, 
+          calendarName: $calendarName, 
+          description: $description, 
+          start: $start, 
+          end: $end, 
+          location: $location, 
+          public: $public, 
+          rules: $rules, 
+          color: $backgroundColor}""";
     return string;
   }
 
@@ -43,7 +56,8 @@ class Event {
         public: data?['public'],
         rules: data?['rules'] is Iterable ? Map.from(data?['rules']) : null,
         description: data?['description'],
-        location: data?['location']);
+        location: data?['location'],
+        backgroundColor: data?['backgroundColor']);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -56,7 +70,7 @@ class Event {
       if (rules != null) "rules": rules,
       if (description != null) "description": description,
       if (location != null) "location": location,
+      if (backgroundColor != null) "backgroundColor": backgroundColor,
     };
   }
-
 }
