@@ -13,10 +13,12 @@ class NetworkService {
     - classroom ex : 2D15
   **/
   Future<List<Event>> getCalendar(calendarId) async {
+    List<Event> events = [];
+
     // add the selected Id of the calendar
     var url = Uri.parse(calendarUrl + calendarId);
     final response = await http.get(url);
-    List<Event> events = [];
+    
 
     if (response.statusCode == 200) {
       var eventsResponse = response.body;

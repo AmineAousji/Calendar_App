@@ -14,11 +14,9 @@ class DatabaseService {
           fromFirestore: Event.fromFirestore,
           toFirestore: (Event eventTest, options) => eventTest.toFirestore());
 
-  // late Future<DocumentSnapshot> eventDocument;
-
   /// Get multiple events. You can filter with the parameters:
   /// - calendar : string
-  Future<List<Event>> readData({List? calendarNames}) async {
+  Future<List<Event>> readBatchOfData(List<String> list, {List? calendarNames}) async {
     List<Event> events = [];
 
     events = await eventsRef
@@ -45,14 +43,6 @@ class DatabaseService {
     late Event event;
 
     event = (await eventsRef.doc(id).get()).data()!;
-    // event = await eventsRef.doc(id).get().then(
-    //   (res) {
-    //     event = res.data()!;
-    //     print(event);
-    //     return event;
-    //   },
-    //   onError: (e) => print("Error getting event : $e"),
-    // );
 
     return event;
   }
@@ -61,7 +51,7 @@ class DatabaseService {
     eventCollection.doc(id).delete();
   }
 
-  void createData(Map event) {
+  void createSingleData(Map event) {
     //modifier pour prendre objet event
     eventCollection.add(event);
 
