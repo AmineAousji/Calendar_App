@@ -1,27 +1,34 @@
-import 'package:calendar_app/services/event_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:provider/provider.dart';
+import 'package:calendar_app/services/event_provider.dart';
 
-import 'event_view_page.dart';
-import 'models/event_data_source.dart';
+import '../pages/event_view_page.dart';
+import '../models/event_data_source.dart';
 
-class Schedule extends StatelessWidget {
+class CalendarWidget extends StatelessWidget {
+  
 
   @override
   Widget build(BuildContext context) {
-    var events = Provider.of<EventProvider>(context).events;
+    final events = Provider.of<EventProvider>(context).events;
+    
+    if (events.isEmpty){
+      Provider.of<EventProvider>(context, listen: false).syncEventsFromDB();
+    }
+    
+
     return SfCalendar(
       view: CalendarView.week,
-      dataSource: EventDataSource(events),
       initialDisplayDate: DateTime.now(),
-      cellBorderColor: Colors.transparent,
+      dataSource: EventDataSource(events),
 
       //to show the events of a selected date
       onLongPress: (details) {
         final provider = Provider.of<EventProvider>(context, listen: false);
         provider.setDate(details.date!);
       },
+
       // ability to open a UI to update / delete the event
       onTap: (details) {
         if (details.appointments == null) return;
