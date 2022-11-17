@@ -16,7 +16,7 @@ class DatabaseService {
 
   /// Get multiple events. You can filter with the parameters:
   /// - calendar : string
-  Future<List<Event>> readBatchOfData(List<String> list, {List? calendarNames}) async {
+  Future<List<Event>> readBatchOfData(List calendarNames) async {
     List<Event> events = [];
 
     events = await eventsRef
