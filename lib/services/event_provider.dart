@@ -12,7 +12,7 @@ class EventProvider extends ChangeNotifier{
 
   void setDate(DateTime date) => _selectedDate = date;
 
-  List<Event> get eventsOfSelecteddate => _events;
+  List<Event> get eventsOfSelectedDate => _events;
 
   void addEevent(Event event){
     _events.add(event);
