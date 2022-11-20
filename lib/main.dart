@@ -1,10 +1,5 @@
-<<<<<<< Updated upstream
 import 'package:calendar_app/pages/event_editing_page.dart';
 import 'package:calendar_app/services/event_provider.dart';
-=======
-import 'package:calendar_app/Schedule.dart';
-import 'package:calendar_app/models/event.dart';
->>>>>>> Stashed changes
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -68,22 +63,4 @@ class MainPage extends StatelessWidget {
             label: const Text("SYNC"))
       ];
 
-<<<<<<< Updated upstream
-=======
-  @override
-  void initState() {
-    super.initState();
-
-    // get data from firestore database
-    db.readData(calendarNames: ["17288","Test"]);
-    db.readSingleEvent("wiChYFKmELobcKq4MM6l");
-
-    // nw.getCalendar("serie_4MIN5A");
-    // print(calendar.length.toString());
-    // db.createBatchOfData(calendar);
-
-
-    // db.updateData("6Xc4RPHwTtm5ztsU3K4R", event);
-  }
->>>>>>> Stashed changes
 }

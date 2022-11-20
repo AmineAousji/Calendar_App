@@ -51,26 +51,8 @@ class DatabaseService {
     eventCollection.doc(event.id).delete();
   }
 
-  void createSingleData(Map event) {
-    //modifier pour prendre objet event
-    eventCollection.add(event);
-=======
   void createData(Event event) {
-    Map<String, Object?> toDatabase = {};
-    toDatabase["id"]=event.id;
-    toDatabase["name"]=event.name;
-    toDatabase["calendarName"]=event.calendarName;
-    toDatabase["description"]= event.description;
-    toDatabase["start"]= event.start;
-    toDatabase["end"]= event.end;
-    toDatabase["location"]= event.location;
-    toDatabase["public"]=event.public;
-    toDatabase["rules"]= event.rules;
-    eventCollection.add(toDatabase);
->>>>>>> Stashed changes
-
-    //// PASS event as Event object
-    // await eventsRef.set(event,SetOptions(merge: true));
+    eventsRef.add(event);
   }
 
   /// Create a Batch of multiple events and does a single request to Firestore.
@@ -90,20 +72,7 @@ class DatabaseService {
   }
 
   void updateData(Event event) {
-    //maybe in the future try to only be able to update "public=false" events
-    //modifier pour prendre objet event
-
-    Map<String, Object?> toDatabase = {};
-    toDatabase["id"]=event.id;
-    toDatabase["name"]=event.name;
-    toDatabase["calendarName"]=event.calendarName;
-    toDatabase["description"]= event.description;
-    toDatabase["start"]= event.start;
-    toDatabase["end"]= event.end;
-    toDatabase["location"]= event.location;
-    toDatabase["public"]=event.public;
-    toDatabase["rules"]= event.rules;
-    DocumentReference eventDocument = eventCollection.doc(event.id);
-    eventDocument.update(toDatabase);
+    DocumentReference eventDocument = eventsRef.doc(event.id);
+    eventDocument.update(event.toFirestore());
   }
 }

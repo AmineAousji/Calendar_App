@@ -227,12 +227,17 @@ class _EventEditingPageState extends State<EventEditingPage> {
   /// Save Event method
   Future saveEvent() async {
     final check = _formKey.currentState!.validate();
+    
+    var id = "";
+    if(widget.event != null){
+      id = widget.event!.id;
+    }
 
     if (check) {
       final event = Event(
           // TODO: add the option to set location or we don't really care
           // TODO: add the option to set a description
-          id: '', // firestore will create an id automatically
+          id: id, 
           calendarName: 'ECAM',
           end: Timestamp.fromDate(endDate),
           location: 'location',

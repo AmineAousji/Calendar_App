@@ -17,24 +17,24 @@ class EventProvider extends ChangeNotifier {
   void addEevent(Event event) {
     _events.add(event);
     notifyListeners();
-    // syncEventsFromDB();
+    db.createData(event);
   }
 
   void deleteEvent(Event event) {
     _events.remove(event);
+    db.deleteData(event);
     notifyListeners();
-    // syncEventsFromDB();
   }
 
   void editEvent(Event newEvent, Event oldEvent) {
     final index = _events.indexOf(oldEvent);
     _events[index] = newEvent;
     notifyListeners();
-    // syncEventsFromDB();
+    db.updateData(newEvent);
   }
 
   Future<void> syncEventsFromDB() async {
-    _events = await db.readBatchOfData(["17288", "Test", "serie_4MIN5A"]);
+    _events = await db.readBatchOfData(["17288", "ECAM", "serie_4MIN5A"]);
     notifyListeners();
   }
 }
