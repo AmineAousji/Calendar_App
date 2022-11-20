@@ -47,13 +47,27 @@ class DatabaseService {
     return event;
   }
 
-  void deleteData(String id) {
-    eventCollection.doc(id).delete();
+  void deleteData(Event event) {
+    eventCollection.doc(event.id).delete();
   }
 
   void createSingleData(Map event) {
     //modifier pour prendre objet event
     eventCollection.add(event);
+=======
+  void createData(Event event) {
+    Map<String, Object?> toDatabase = {};
+    toDatabase["id"]=event.id;
+    toDatabase["name"]=event.name;
+    toDatabase["calendarName"]=event.calendarName;
+    toDatabase["description"]= event.description;
+    toDatabase["start"]= event.start;
+    toDatabase["end"]= event.end;
+    toDatabase["location"]= event.location;
+    toDatabase["public"]=event.public;
+    toDatabase["rules"]= event.rules;
+    eventCollection.add(toDatabase);
+>>>>>>> Stashed changes
 
     //// PASS event as Event object
     // await eventsRef.set(event,SetOptions(merge: true));
@@ -75,10 +89,21 @@ class DatabaseService {
         print("Finnished batching ${events.length.toString()} events"));
   }
 
-  void updateData(String id, Map<String, Object> event) {
+  void updateData(Event event) {
     //maybe in the future try to only be able to update "public=false" events
     //modifier pour prendre objet event
-    DocumentReference eventDocument = eventCollection.doc(id);
-    eventDocument.update(event);
+
+    Map<String, Object?> toDatabase = {};
+    toDatabase["id"]=event.id;
+    toDatabase["name"]=event.name;
+    toDatabase["calendarName"]=event.calendarName;
+    toDatabase["description"]= event.description;
+    toDatabase["start"]= event.start;
+    toDatabase["end"]= event.end;
+    toDatabase["location"]= event.location;
+    toDatabase["public"]=event.public;
+    toDatabase["rules"]= event.rules;
+    DocumentReference eventDocument = eventCollection.doc(event.id);
+    eventDocument.update(toDatabase);
   }
 }
