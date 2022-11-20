@@ -51,6 +51,12 @@ class DatabaseService {
     eventCollection.doc(event.id).delete();
   }
 
+  void deleteBatchOfData(List<Event> events) {
+    for (var event in events) {
+      eventCollection.doc(event.id).delete();
+    }
+  }
+
   void createData(Event event) {
     eventsRef.add(event);
   }
@@ -65,6 +71,7 @@ class DatabaseService {
     for (Event event in events) {
       var docRef = eventsRef.doc(event.id);
       batch.set(docRef, event, SetOptions(merge: true));
+      
     }
 
     batch.commit().then((value) =>

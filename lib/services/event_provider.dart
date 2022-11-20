@@ -1,9 +1,11 @@
 import 'package:calendar_app/services/database.dart';
+import 'package:calendar_app/services/network.dart';
 import '../models/event.dart';
 import 'package:flutter/cupertino.dart';
 
 class EventProvider extends ChangeNotifier {
   final DatabaseService db = DatabaseService();
+  final NetworkService nw = NetworkService();
   List<Event> _events = [];
   List<Event> get events => _events;
   DateTime _selectedDate = DateTime.now();
@@ -34,6 +36,10 @@ class EventProvider extends ChangeNotifier {
   }
 
   Future<void> syncEventsFromDB() async {
+    // var ecamEvents = await nw.getCalendar('serie_4MIN5A');
+    // await db.createBatchOfData(ecamEvents);
+    
+
     _events = await db.readBatchOfData(["17288", "ECAM", "serie_4MIN5A"]);
     notifyListeners();
   }

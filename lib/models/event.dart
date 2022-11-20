@@ -42,6 +42,12 @@ class Event {
     return string;
   }
 
+  String formatString(String string) {
+    var formatted = string.split('\n');
+    print(formatted);
+    return formatted.toString();
+  }
+
   factory Event.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
