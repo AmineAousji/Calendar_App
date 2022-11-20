@@ -38,7 +38,6 @@ class EventProvider extends ChangeNotifier {
   Future<void> syncEventsFromDB() async {
     // var ecamEvents = await nw.getCalendar('serie_4MIN5A');
     // await db.createBatchOfData(ecamEvents);
-    
 
     _events = await db.readBatchOfData(["17288", "ECAM", "serie_4MIN5A"]);
     notifyListeners();

@@ -71,7 +71,6 @@ class DatabaseService {
     for (Event event in events) {
       var docRef = eventsRef.doc(event.id);
       batch.set(docRef, event, SetOptions(merge: true));
-      
     }
 
     batch.commit().then((value) =>
@@ -81,5 +80,14 @@ class DatabaseService {
   void updateData(Event event) {
     DocumentReference eventDocument = eventsRef.doc(event.id);
     eventDocument.update(event.toFirestore());
+  }
+
+  void updateBatchOfData(List<Event> oldEvents, List<Event> newEvents) {
+    for (Event event in oldEvents) {
+      if (newEvents.any((element) => element.id == event.id)) {
+        int index = newEvents.indexWhere((element) => element.id == event.id);
+        updateData(newEvents[index]);
+      }
+    }
   }
 }

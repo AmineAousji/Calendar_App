@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Event {
   final String id; // id of the firestoreDB event
-  final String calendarName; // name of the group of the calendar ex: 17288, 4MIN,...
+  final String
+      calendarName; // name of the group of the calendar ex: 17288, 4MIN,...
   final String? location; // location of the event ex: 2F51
   final String name; // title of the event
   final String? description; // more details
@@ -27,8 +28,7 @@ class Event {
 
   @override
   String toString() {
-    var string =
-        """{
+    var string = """{
           id: $id, 
           name: $name, 
           calendarName: $calendarName, 
@@ -42,10 +42,17 @@ class Event {
     return string;
   }
 
-  String formatString(String string) {
-    var formatted = string.split('\n');
-    print(formatted);
-    return formatted.toString();
+  String getDescription() {
+    var newDescription = "";
+    if (description != null) {
+      newDescription = description!;
+      // newDescription =
+      //     description!.split('\\n').join('\n').split(':').join(' : ');
+      // // newDescription = formatted!.join("\n");
+      // print(newDescription);
+    }
+
+    return newDescription;
   }
 
   factory Event.fromFirestore(

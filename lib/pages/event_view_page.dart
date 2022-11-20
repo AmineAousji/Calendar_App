@@ -27,7 +27,7 @@ class EventViewPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              event.description.toString(),
+              event.getDescription(),
               style: const TextStyle(color: Colors.black, fontSize: 18),
             )
           ],
