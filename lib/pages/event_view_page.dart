@@ -1,10 +1,9 @@
+import 'package:calendar_app/pages/event_editing_page.dart';
 import 'package:calendar_app/services/event_provider.dart';
 import 'package:flutter/material.dart';
-import 'models/event.dart';
-import'package:calendar_app/EventPage.dart';
-
+import '../models/event.dart';
 import 'package:provider/provider.dart';
-import 'tools.dart';
+import '../tools.dart';
 
 class EventViewPage  extends StatelessWidget {
   final Event event;
@@ -25,13 +24,13 @@ class EventViewPage  extends StatelessWidget {
         buildDateTime(event),
         SizedBox(height: 32),
         Text(
-          event.title,
+          event.name,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 24),
         Text(
-          event.description,
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          event.description.toString(),
+          style: const TextStyle(color: Colors.black, fontSize: 18),
         )
       ],
     ),
@@ -39,22 +38,22 @@ class EventViewPage  extends StatelessWidget {
  Widget buildDateTime(Event event){
    return Column(
      children:[
-       buildDate('Start', event.start),
+       buildDate('Start', event.start.toDate()),
        const SizedBox(height: 20),
-       buildDate('End', event.end),
+       buildDate('End', event.end.toDate()),
      ],
    );
  }
 }
 
-Widget buildDate (String title, DateTime date){
+Widget buildDate (String name, DateTime date){
   return Row(
     children:[
       Expanded(
       flex: 2,
         child:
         Text(
-          title,
+          name,
           style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
@@ -79,7 +78,7 @@ List<Widget> buildViewingActions (BuildContext context, Event event) => [
     icon: const Icon(Icons.edit),
     onPressed: () => Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => Eventpage(event: event),
+        builder: (context) => EventEditingPage(event: event),
       ),
     ),
   ),
