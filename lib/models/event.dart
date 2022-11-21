@@ -1,5 +1,5 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Event {
   final String id; // id of the firestoreDB event
@@ -51,8 +51,24 @@ class Event {
       // // newDescription = formatted!.join("\n");
       // print(newDescription);
     }
-
     return newDescription;
+  }
+
+  Color getColor() {
+    if (backgroundColor != null) {
+      return backgroundColor!;
+    } else {
+      // if there is a problem in constructing colors from DB
+      return Colors.green;
+    }
+  }
+
+  String getHourAndMinutes() {
+    var startTime = "${start.toDate().hour}:${start.toDate().minute}";
+    var endTime = "${end.toDate().hour}:${end.toDate().minute}";
+    String time = "$startTime - $endTime";
+
+    return time;
   }
 
   factory Event.fromFirestore(
@@ -70,7 +86,7 @@ class Event {
         rules: data?['rules'] is Iterable ? Map.from(data?['rules']) : null,
         description: data?['description'],
         location: data?['location'],
-        backgroundColor: data?['backgroundColor']);
+        backgroundColor: Color(data!['backgroundColor'] ?? Colors.blue.value));
   }
 
   Map<String, dynamic> toFirestore() {
@@ -83,7 +99,8 @@ class Event {
       if (rules != null) "rules": rules,
       if (description != null) "description": description,
       if (location != null) "location": location,
-      if (backgroundColor != null) "backgroundColor": backgroundColor,
+      if (backgroundColor != null)
+        "backgroundColor": backgroundColor!.value,
     };
   }
 }

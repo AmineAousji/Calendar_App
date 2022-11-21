@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../models/event.dart';
 import '../services/event_provider.dart';
 import '../tools.dart';
@@ -22,6 +22,27 @@ class _EventEditingPageState extends State<EventEditingPage> {
   late DateTime endDate;
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
+  Color backgroundColor = Colors.blue;
+  final Map<String, Color> colorMap = {
+    "Tomato": Colors.red,
+    "Pink": Colors.pink,
+    "Purple": Colors.purple,
+    "DeepPurple": Colors.deepPurple,
+    "Indigo": Colors.indigo,
+    "Blue": Colors.blue,
+    "LightBlue": Colors.lightBlue,
+    "Cyan": Colors.cyan,
+    "Teal": Colors.teal,
+    "Green": Colors.green,
+    "LightGreen": Colors.lightGreen,
+    "Lime": Colors.lime,
+    "Yellow": Colors.yellow,
+    "Amber": Colors.amber,
+    "Orange": Colors.orange,
+    "DeepOrange": Colors.deepOrange,
+    "Brown": Colors.brown,
+    "BlueGrey": Colors.blueGrey,
+  };
 
   @override
   //to init start and end date
@@ -31,14 +52,14 @@ class _EventEditingPageState extends State<EventEditingPage> {
     if (widget.event == null) {
       startDate = DateTime.now();
       endDate = DateTime.now().add(const Duration(hours: 2));
-    } else{
+    } else {
       // being able to modify an event
       final event = widget.event!;
 
+      backgroundColor = event.backgroundColor ?? Colors.blue;
       titleController.text = event.name;
       startDate = event.start.toDate();
       endDate = event.end.toDate();
-
     }
   }
 
@@ -49,6 +70,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
     super.dispose();
   }
 
+  // --------------SCAFFOLD--------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,13 +88,15 @@ class _EventEditingPageState extends State<EventEditingPage> {
                 // buildTitle is a widget that is responsible of a Textfield
                 buildTitle(),
                 SizedBox(height: 12),
-                buildDateTimePickers()
+                buildDateTimePickers(),
+                buildColor()
               ],
             ),
           )),
     );
   }
 
+  // --------------TOP BAR--------------
   /// Top bar Save button
   List<Widget> buildEditingActions() => [
         ElevatedButton.icon(
@@ -85,6 +109,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
             label: const Text("SAVE"))
       ];
 
+  // --------------TEXT FIELD--------------
   /// Title Text form = Event name
   Widget buildTitle() => TextFormField(
         style: const TextStyle(fontSize: 24),
@@ -97,6 +122,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
         controller: titleController,
       );
 
+  // --------------DATETIME WIDGETS--------------
   /// Time form widget
   Widget buildDateTimePickers() => Column(
         children: [
@@ -224,12 +250,64 @@ class _EventEditingPageState extends State<EventEditingPage> {
     }
   }
 
+  // --------------PICK COLOR WIDGETS--------------
+  /// popup Dialog to pick a color
+  Widget showColorPickerDialog() => AlertDialog(
+        title: const Text('Pick a color !'),
+        content: SingleChildScrollView(
+          child: BlockPicker(
+              pickerColor: backgroundColor,
+              availableColors: Colors.primaries,
+              onColorChanged: (Color color) {
+                //on color picked
+                setState(() {
+                  backgroundColor = color;
+                });
+              }),
+        ),
+        actions: [
+          ElevatedButton(
+            child: const Text('DONE'),
+            onPressed: () {
+              Navigator.of(context).pop(); //dismiss the color picker
+            },
+          ),
+        ],
+      );
+
+  /// Color Header widget
+  Widget buildColor() => buildHeader(
+        header: 'Select color',
+        child: Row(
+          children: [
+            Expanded(
+                flex: 1, child: Icon(Icons.circle, color: backgroundColor)),
+            Expanded(
+              flex: 6, // it adds some space between date and arrow_drop_down
+              child: buildDropdownField(
+                  text: getColorName(),
+                  onClicked: () => showDialog(
+                      context: context,
+                      builder: ((context) => showColorPickerDialog()))),
+            )
+          ],
+        ),
+      );
+
+  /// get the name of the primary color selected
+  String getColorName() {
+    return colorMap.keys.firstWhere(
+      (k) => colorMap[k]!.value == backgroundColor.value,
+      orElse: () => "null");
+  }
+
+  // --------------SAVE OR UPDATE EVENT--------------
   /// Save Event method
   Future saveEvent() async {
     final check = _formKey.currentState!.validate();
-    
+
     var id = "";
-    if(widget.event != null){
+    if (widget.event != null) {
       id = widget.event!.id;
     }
 
@@ -237,13 +315,14 @@ class _EventEditingPageState extends State<EventEditingPage> {
       final event = Event(
           // TODO: add the option to set location or we don't really care
           // TODO: add the option to set a description
-          id: id, 
+          id: id,
           calendarName: 'ECAM',
           end: Timestamp.fromDate(endDate),
           location: 'location',
           name: titleController.text,
           public: false,
-          start: Timestamp.fromDate(startDate));
+          start: Timestamp.fromDate(startDate),
+          backgroundColor: backgroundColor);
 
       final isUpdating = widget.event != null;
       final provider = Provider.of<EventProvider>(context, listen: false);

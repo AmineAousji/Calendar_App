@@ -18,8 +18,9 @@ class EventProvider extends ChangeNotifier {
 
   void addEevent(Event event) {
     _events.add(event);
-    notifyListeners();
     db.createData(event);
+    // notifyListeners();
+    syncEventsFromDB(); // have to do that in order to be able to delete instantly after
   }
 
   void deleteEvent(Event event) {
