@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
       create: (context) => EventProvider(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: title,
         home: Scaffold(
           appBar: AppBar(title: const Text("Ecamlandar")),

@@ -22,6 +22,8 @@ class _EventEditingPageState extends State<EventEditingPage> {
   late DateTime endDate;
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
   Color backgroundColor = Colors.blue;
   final Map<String, Color> colorMap = {
     "Tomato": Colors.red,
@@ -89,7 +91,9 @@ class _EventEditingPageState extends State<EventEditingPage> {
                 buildTitle(),
                 SizedBox(height: 12),
                 buildDateTimePickers(),
-                buildColor()
+                buildColor(),
+                SizedBox(height: 12),
+                buildDescription()
               ],
             ),
           )),
@@ -121,6 +125,15 @@ class _EventEditingPageState extends State<EventEditingPage> {
             name != null && name.isEmpty ? "Name can't be empty" : null,
         controller: titleController,
       );
+
+  Widget buildDescription() =>  TextField(
+    maxLines: 2,
+    style: const TextStyle(fontSize: 24),
+    decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'Add a description'),
+    controller: descriptionController,
+  );
 
   // --------------DATETIME WIDGETS--------------
   /// Time form widget
@@ -313,12 +326,11 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
     if (check) {
       final event = Event(
-          // TODO: add the option to set location or we don't really care
-          // TODO: add the option to set a description
           id: id,
           calendarName: 'ECAM',
           end: Timestamp.fromDate(endDate),
-          location: 'location',
+          description: descriptionController.text,
+          location: '1E06',
           name: titleController.text,
           public: false,
           start: Timestamp.fromDate(startDate),
