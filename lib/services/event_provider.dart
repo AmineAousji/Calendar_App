@@ -43,7 +43,7 @@ class EventProvider extends ChangeNotifier {
     // var ecamEvents = await nw.getCalendar('serie_4MIN5A');
     // await db.createBatchOfData(ecamEvents);
     user = AuthService().getUser()!;
-    _events = await db.readBatchOfData(["17288", "ECAM", "serie_4MIN5A", user.email]);
+    _events = await db.readBatchOfData(["ECAM", "serie_4MIN5A", user.email]);
     notifyListeners();
   }
 }
