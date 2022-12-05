@@ -60,6 +60,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
       backgroundColor = event.backgroundColor ?? Colors.blue;
       titleController.text = event.name;
+      descriptionController.text = event.description!;
       startDate = event.start.toDate();
       endDate = event.end.toDate();
     }
@@ -69,6 +70,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
   //Clear the text editor ressources when we reload the page
   void dispose() {
     titleController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
