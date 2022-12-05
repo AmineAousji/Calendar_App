@@ -1,4 +1,7 @@
+import 'package:calendar_app/main.dart';
+import 'package:calendar_app/pages/Login_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:calendar_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -20,6 +23,7 @@ class EventEditingPage extends StatefulWidget {
 class _EventEditingPageState extends State<EventEditingPage> {
   late DateTime startDate;
   late DateTime endDate;
+  late String userCalendar;
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -50,6 +54,13 @@ class _EventEditingPageState extends State<EventEditingPage> {
   //to init start and end date
   void initState() {
     super.initState();
+
+    var user = AuthService().getUser();
+    if (user != null) {
+      userCalendar = user.email!;
+    } else {
+      userCalendar = "ECAM";
+    }
 
     if (widget.event == null) {
       startDate = DateTime.now();
@@ -128,14 +139,13 @@ class _EventEditingPageState extends State<EventEditingPage> {
         controller: titleController,
       );
 
-  Widget buildDescription() =>  TextField(
-    maxLines: 2,
-    style: const TextStyle(fontSize: 24),
-    decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        hintText: 'Add a description'),
-    controller: descriptionController,
-  );
+  Widget buildDescription() => TextField(
+        maxLines: 2,
+        style: const TextStyle(fontSize: 24),
+        decoration: const InputDecoration(
+            border: OutlineInputBorder(), hintText: 'Add a description'),
+        controller: descriptionController,
+      );
 
   // --------------DATETIME WIDGETS--------------
   /// Time form widget
@@ -312,8 +322,8 @@ class _EventEditingPageState extends State<EventEditingPage> {
   /// get the name of the primary color selected
   String getColorName() {
     return colorMap.keys.firstWhere(
-      (k) => colorMap[k]!.value == backgroundColor.value,
-      orElse: () => "null");
+        (k) => colorMap[k]!.value == backgroundColor.value,
+        orElse: () => "null");
   }
 
   // --------------SAVE OR UPDATE EVENT--------------
@@ -329,10 +339,9 @@ class _EventEditingPageState extends State<EventEditingPage> {
     if (check) {
       final event = Event(
           id: id,
-          calendarName: 'ECAM',
+          calendarName: userCalendar,
           end: Timestamp.fromDate(endDate),
           description: descriptionController.text,
-          location: '1E06',
           name: titleController.text,
           public: false,
           start: Timestamp.fromDate(startDate),
