@@ -16,9 +16,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static String title = "Ecamlandar";
+  static String title = "Ecamlendar";
 
- /* @override
+  /* @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => EventProvider(),
       child: MaterialApp(
@@ -36,44 +36,56 @@ class MyApp extends StatelessWidget {
         title: title,
         home: Scaffold(
           appBar: AppBar(title: const Text("Ecamlandar")),
-          body: const MyStatefulWidget(),
+          body: const MyStatefulWidget(), //login page
         ),
-      )
-  );
-  }
+      ));
+}
 
 class MainPage extends StatelessWidget {
   // Provider.of<EventProvider>(context, listen: false).syncEventsFromDB();
+  var auth = AuthService();
 
+  @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(MyApp.title),
-          centerTitle: true,
-          actions: syncChangesActions(context),
+      appBar: AppBar(
+        title: Text(MyApp.title),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            auth.logOut();
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => MyStatefulWidget(),
+              ),
+            );
+          },
         ),
-        
-        body: CalendarWidget(),
-        floatingActionButton: FloatingActionButton(
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: () => {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const EventEditingPage())),
-        }
-    )
-  );
-  
- List<Widget> syncChangesActions(BuildContext context) => [
-        ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.blue,
-                elevation: 0),
-            onPressed: Provider.of<EventProvider>(context, listen: false).syncEventsFromDB,
-            icon: const Icon(Icons.sync),
-            label: const Text("SYNC"))
-      ];
+        actions: syncChangesActions(context),
+      ),
+      body: CalendarWidget(),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () => {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const EventEditingPage())),
+              }));
 
+  List<Widget> syncChangesActions(BuildContext context) => [
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.blue,
+              elevation: 0),
+          onPressed: Provider.of<EventProvider>(context, listen: false)
+              .syncEventsFromDB,
+          icon: const Icon(
+            Icons.sync,
+          ),
+          label: const Text("SYNC"),
+        ),
+      ];
 }

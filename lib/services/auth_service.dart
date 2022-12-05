@@ -46,4 +46,13 @@ class AuthService {
       return e.toString();
     }
   }
+
+  User? getUser() {
+    var user = FirebaseAuth.instance.currentUser;
+    return user;
+  }
+
+  Future <void> logOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 }

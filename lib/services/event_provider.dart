@@ -1,3 +1,4 @@
+import 'package:calendar_app/services/auth_service.dart';
 import 'package:calendar_app/services/database.dart';
 import 'package:calendar_app/services/network.dart';
 import '../models/event.dart';
@@ -15,6 +16,8 @@ class EventProvider extends ChangeNotifier {
   void setDate(DateTime date) => _selectedDate = date;
 
   List<Event> get eventsOfSelectedDate => _events;
+
+  var user = AuthService().getUser()!;
 
   void addEevent(Event event) {
     _events.add(event);
@@ -39,8 +42,8 @@ class EventProvider extends ChangeNotifier {
   Future<void> syncEventsFromDB() async {
     // var ecamEvents = await nw.getCalendar('serie_4MIN5A');
     // await db.createBatchOfData(ecamEvents);
-
-    _events = await db.readBatchOfData(["17288", "ECAM", "serie_4MIN5A"]);
+    user = AuthService().getUser()!;
+    _events = await db.readBatchOfData(["17288", "ECAM", "serie_4MIN5A", user.email]);
     notifyListeners();
   }
 }
