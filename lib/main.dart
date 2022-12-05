@@ -1,9 +1,11 @@
 import 'package:calendar_app/pages/event_editing_page.dart';
+import 'package:calendar_app/services/auth_service.dart';
 import 'package:calendar_app/services/event_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'widgets/calendar_widget.dart';
+import 'package:calendar_app/pages/Login_page.dart';
 
 void main() async {
   // initializers to talk with firebase
@@ -16,19 +18,28 @@ void main() async {
 class MyApp extends StatelessWidget {
   static String title = "Ecamlandar";
 
-  
-
-
-  @override
+ /* @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => EventProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: MainPage(),
         title: title,
-      ),   
+      ),
     );
-}
+}*/
+  @override
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+      create: (context) => EventProvider(),
+      child: MaterialApp(
+        title: title,
+        home: Scaffold(
+          appBar: AppBar(title: const Text("Ecamlandar")),
+          body: const MyStatefulWidget(),
+        ),
+      )
+  );
+  }
 
 class MainPage extends StatelessWidget {
   // Provider.of<EventProvider>(context, listen: false).syncEventsFromDB();
