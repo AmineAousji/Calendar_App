@@ -18,7 +18,6 @@ class NetworkService {
     // add the selected Id of the calendar
     var url = Uri.parse(calendarUrl + calendarId);
     final response = await http.get(url);
-    
 
     if (response.statusCode == 200) {
       var eventsResponse = response.body;
@@ -50,7 +49,8 @@ class NetworkService {
           } else if (detail.startsWith("SUMMARY")) {
             name = detail.substring(8);
           } else if (detail.startsWith("DESCRIPTION")) {
-            description = detail.substring(11);
+            description = detail.substring(12);
+            description = description.split('\\n').join('\n').split(':').join(' : ');
           } else if (detail.startsWith("LOCATION")) {
             location = detail.substring(8);
           } else if (detail.startsWith("DTSTART")) {
@@ -81,7 +81,6 @@ class NetworkService {
         events.add(newEvent);
       }
       print("Retrieved " + events.length.toString() + " events");
-
     } else {
       throw Exception("failure getting the calendar");
     }

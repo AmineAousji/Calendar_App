@@ -51,6 +51,12 @@ class DatabaseService {
     eventCollection.doc(event.id).delete();
   }
 
+  void deleteBatchOfData(List<Event> events) {
+    for (var event in events) {
+      eventCollection.doc(event.id).delete();
+    }
+  }
+
   void createData(Event event) {
     eventsRef.add(event);
   }
@@ -74,5 +80,14 @@ class DatabaseService {
   void updateData(Event event) {
     DocumentReference eventDocument = eventsRef.doc(event.id);
     eventDocument.update(event.toFirestore());
+  }
+
+  void updateBatchOfData(List<Event> oldEvents, List<Event> newEvents) {
+    for (Event event in oldEvents) {
+      if (newEvents.any((element) => element.id == event.id)) {
+        int index = newEvents.indexWhere((element) => element.id == event.id);
+        updateData(newEvents[index]);
+      }
+    }
   }
 }

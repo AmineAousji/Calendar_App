@@ -1,9 +1,10 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Event {
   final String id; // id of the firestoreDB event
-  final String calendarName; // name of the group of the calendar ex: 17288, 4MIN,...
+  final String
+      calendarName; // name of the group of the calendar ex: 17288, 4MIN,...
   final String? location; // location of the event ex: 2F51
   final String name; // title of the event
   final String? description; // more details
@@ -27,8 +28,7 @@ class Event {
 
   @override
   String toString() {
-    var string =
-        """{
+    var string = """{
           id: $id, 
           name: $name, 
           calendarName: $calendarName, 
@@ -40,6 +40,35 @@ class Event {
           rules: $rules, 
           color: $backgroundColor}""";
     return string;
+  }
+
+  String getDescription() {
+    var newDescription = "";
+    if (description != null) {
+      newDescription = description!;
+      // newDescription =
+      //     description!.split('\\n').join('\n').split(':').join(' : ');
+      // // newDescription = formatted!.join("\n");
+      // print(newDescription);
+    }
+    return newDescription;
+  }
+
+  Color getColor() {
+    if (backgroundColor != null) {
+      return backgroundColor!;
+    } else {
+      // if there is a problem in constructing colors from DB
+      return Colors.green;
+    }
+  }
+
+  String getHourAndMinutes() {
+    var startTime = "${start.toDate().hour}:${start.toDate().minute}";
+    var endTime = "${end.toDate().hour}:${end.toDate().minute}";
+    String time = "$startTime - $endTime";
+
+    return time;
   }
 
   factory Event.fromFirestore(
@@ -57,7 +86,7 @@ class Event {
         rules: data?['rules'] is Iterable ? Map.from(data?['rules']) : null,
         description: data?['description'],
         location: data?['location'],
-        backgroundColor: data?['backgroundColor']);
+        backgroundColor: Color(data!['backgroundColor'] ?? Colors.blue.value));
   }
 
   Map<String, dynamic> toFirestore() {
@@ -70,7 +99,8 @@ class Event {
       if (rules != null) "rules": rules,
       if (description != null) "description": description,
       if (location != null) "location": location,
-      if (backgroundColor != null) "backgroundColor": backgroundColor,
+      if (backgroundColor != null)
+        "backgroundColor": backgroundColor!.value,
     };
   }
 }

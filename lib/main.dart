@@ -39,6 +39,7 @@ class MainPage extends StatelessWidget {
           centerTitle: true,
           actions: syncChangesActions(context),
         ),
+        
         body: CalendarWidget(),
         floatingActionButton: FloatingActionButton(
         child: const Icon(
