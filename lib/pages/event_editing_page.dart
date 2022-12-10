@@ -71,7 +71,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
       backgroundColor = event.backgroundColor ?? Colors.blue;
       titleController.text = event.name;
-      descriptionController.text = event.description!;
+      descriptionController.text = event.description ?? "";
       startDate = event.start.toDate();
       endDate = event.end.toDate();
     }
