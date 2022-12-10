@@ -20,6 +20,7 @@ class CalendarWidget extends StatelessWidget {
       initialDisplayDate: DateTime.now(),
       dataSource: EventDataSource(events),
       appointmentBuilder: appointmentBuilder,
+      firstDayOfWeek: 1,
       //to show the events of a selected date
       onLongPress: (details) {
         final provider = Provider.of<EventProvider>(context, listen: false);
